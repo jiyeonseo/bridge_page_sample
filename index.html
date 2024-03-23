@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>중간 Redirect 페이지</title>
+    <!-- Google Analytics 스크립트 삽입 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=GA_TRACKING_ID"></script>
+    <script>
+        // Google Analytics 초기화
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'GA_TRACKING_ID');
+    </script>
+</head>
+<body>
+    <script>
+        // query parameter에서 redirect_url 파라미터 가져오기
+        const urlParams = new URLSearchParams(window.location.search);
+        const redirectUrl = urlParams.get('redirect_url');
+
+        // Google Analytics에 이벤트 전송
+        gtag('event', 'page_view', {
+            'event_category': 'Redirect',
+            'event_label': redirectUrl
+        });
+
+        // UTM 파라미터 추출 및 Google Analytics에 전송
+        const utmSource = urlParams.get('utm_source');
+        const utmMedium = urlParams.get('utm_medium');
+        const utmCampaign = urlParams.get('utm_campaign');
+        const utmContent = urlParams.get('utm_content');
+        const utmTerm = urlParams.get('utm_term');
+
+        gtag('event', 'utm_data', {
+            'utm_source': utmSource,
+            'utm_medium': utmMedium,
+            'utm_campaign': utmCampaign,
+            'utm_content': utmContent,
+            'utm_term': utmTerm
+        });
+
+        // 중간 페이지에서 사용자를 리디렉션
+        if (redirectUrl) {
+            window.location.replace(redirectUrl);
+        } else {
+            console.error('리디렉션할 URL이 없습니다.');
+        }
+    </script>
+</body>
+</html>
